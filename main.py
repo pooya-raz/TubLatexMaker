@@ -27,10 +27,10 @@ class TubMediaWikiService:
     def __init__(self, http_library):
         self.http_library = http_library
 
-    def semantic_search(self, query: str) -> dict:
+    def semantic_search(self, semantic_query: str) -> dict:
         logging.info("Connecting to:" + self.url)
         response = self.http_library.get(
-            self.url + "/api.php?action=ask&format=json&query=" + query,
+            self.url + "/api.php?action=ask&format=json&query=" + semantic_query,
             headers=self.headers,
         )
         logging.info("Connection status: Successful")
@@ -43,6 +43,16 @@ class DictToText(Protocol):
 
     def make_latex(self, dictionary: dict, format_map: dict) -> str:
         ...
+
+
+class TubToBrill:
+    def make_latex(self, dictionary: dict, format_map: dict) -> str:
+        return "Hello"
+
+
+class LatexMaker:
+    def title(self, dictionary: dict) -> str:
+        return "\\textbf{" + dictionary["title"] + "}"
 
 
 if __name__ == "__main__":
