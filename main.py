@@ -5,7 +5,7 @@
 import logging
 import requests
 from typing import Protocol
-from tub_latex_maker.services.tub_media_wiki_service import TubMediaWikiService
+from src.services.tub_media_wiki_service import TubMediaWikiService
 
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
