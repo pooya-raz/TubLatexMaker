@@ -1,5 +1,5 @@
 import unittest
-from main import TubToBrill, LatexMaker
+from src.main import LatexMaker
 
 
 class TestLatex(unittest.TestCase):
