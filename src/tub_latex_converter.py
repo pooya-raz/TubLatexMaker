@@ -1,30 +1,9 @@
-def to_latex(dictionary: dict, key: str, latex_pre: str, latex_post: str) -> str:
-    """The basic function that converts to LaTeX"""
-    return latex_pre + dictionary[key] + latex_post
-
-
-# These are implementations of the to_latex function
-def title(dictionary: dict) -> str:
-    return to_latex(dictionary, "title", "\\textbf{", "}")
-
-
-def to_title(dictionary: dict) -> str:
-    return "\\textbf{" + dictionary["title"] + "}"
-
-
-def to_author_dates(dictionary: dict) -> str:
-    return "hello"
-
-
-def to_description(dictionary: dict) -> str:
-    return "description"
-
-
-def to_item_manuscript_with_commentary(dictionary: dict) -> str:
-    title = to_title(dictionary)
-    description = to_description(dictionary)
+def to_entry_with_commentary(entry: dict) -> str:
+    transliterated_title = "".join(entry["Title (transliterated)"])
+    arabic_title = "".join(entry["Title (Arabic)"])
     return f"""
-    \\item {title}
+    \\item \\textbf{{{transliterated_title}}}
+    {arabic_title}
     \\newline
     Muḥammad b. Faraj al-Ḥimyarī al-Najafī
     \\newline
@@ -32,7 +11,7 @@ def to_item_manuscript_with_commentary(dictionary: dict) -> str:
     \\newline
     \\newline
     \\textbf{{Description}}
-    {description}
+
     \\newline	
     A short one-line description.
     \\newline
@@ -52,3 +31,8 @@ def to_item_manuscript_with_commentary(dictionary: dict) -> str:
     This commentary.
     \\newline
     """
+
+
+def to_entry(dictionary: dict):
+    for entry in dictionary:
+        return to_entry_with_commentary(entry)
