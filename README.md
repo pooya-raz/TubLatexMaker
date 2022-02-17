@@ -62,7 +62,8 @@ Add additional notes about how to deploy this on a live system
 
 - [Python](https://www.python.org/)
 - [Poetry](https://python-poetry.org) - Dependency Management
-- [black](https://black.readthedocs.io/en/stable/) - Code Formatter 
+- [black](https://black.readthedocs.io/en/stable/) - Code Formatter
+- [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
 
 ## Contributing
 
