@@ -1,6 +1,8 @@
 import logging
 from typing import Protocol, runtime_checkable
 
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
+
 
 class MediaWikiAPIService(Protocol):
     """Consumes MediaWiki API"""

@@ -8,9 +8,6 @@ from typing import Protocol
 from src.services.tub_media_wiki_service import TubMediaWikiService
 
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
-
-
 class DictToText(Protocol):
     def __init__(self):
         ...
@@ -24,9 +21,8 @@ class TubToBrill:
         return "Hello"
 
 
-class LatexMaker:
-    def title(self, dictionary: dict) -> str:
-        return "\\textbf{" + dictionary["title"] + "}"
+def title(dictionary: dict) -> str:
+    return "\\textbf{" + dictionary["title"] + "}"
 
 
 if __name__ == "__main__":
