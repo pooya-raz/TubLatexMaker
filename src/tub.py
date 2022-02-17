@@ -21,10 +21,6 @@ class TubToBrill:
         return "Hello"
 
 
-def title(dictionary: dict) -> str:
-    return "\\textbf{" + dictionary["title"] + "}"
-
-
 if __name__ == "__main__":
     tubMediaWikiService = TubMediaWikiService(requests)
     query = "[[Category:Title]]|?Title (Arabic)|?Title (transliterated)|limit=5"
