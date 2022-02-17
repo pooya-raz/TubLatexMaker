@@ -1,4 +1,4 @@
-import src.tub_latex_converter as convert
+import tublatexmaker.tub_latex_converter as convert
 
 entry = {
     "(Bahth fī) uṣūl al-fiqh": {

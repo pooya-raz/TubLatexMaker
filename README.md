@@ -28,35 +28,15 @@ What things you need to install the software and how to install them
 
 4. Run the program
 
-   ```python blank```
-A step by step series of examples that tell you how to get a development env running
+   ```poetry run main```
 
-Demo - Todo
-
+A demo is coming soon.
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+Simply run:
 
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
+```poetry run pytest```
 
 ## Built With
 

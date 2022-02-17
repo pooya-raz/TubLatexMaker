@@ -6,7 +6,7 @@ from pprint import pprint
 
 import requests
 from typing import Protocol
-from src.services.tub_media_wiki_service import TubMediaWikiService
+from tublatexmaker.services.tub_media_wiki_service import TubMediaWikiService
 
 
 class DictToText(Protocol):
@@ -26,5 +26,12 @@ if __name__ == "__main__":
     tubMediaWikiService = TubMediaWikiService(requests)
     query = "[[Category:Title]]|?Title (Arabic)|?Title (transliterated)|limit=5"
     pprint(tubMediaWikiService.semantic_search(query))
+
+
+def main():
+    tubMediaWikiService = TubMediaWikiService(requests)
+    query = "[[Category:Title]]|?Title (Arabic)|?Title (transliterated)|limit=5"
+    pprint(tubMediaWikiService.semantic_search(query))
+
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
