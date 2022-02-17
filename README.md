@@ -1,6 +1,6 @@
 # TubLatexMaker 
 
-Consumes the Twelver Usul Bibliography (TUB) and outputs LaTeX files for publication.
+Consumes the Twelver Usul Bibliography (TUB) MediaWiki API and outputs LaTeX files for publication.
 
 ## Getting Started
 
