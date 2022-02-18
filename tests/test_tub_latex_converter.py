@@ -1,6 +1,6 @@
 import tublatexmaker.tub_latex_converter as convert
 
-entry = {
+dict_of_entries = {
     "(Bahth fī) uṣūl al-fiqh": {
         "displaytitle": "",
         "exists": "1",
@@ -49,6 +49,6 @@ def create_expected_latex(transliterated_title: str, arabic_title: str) -> str:
 
 
 def test_convert_to_entry():
-    entry_values = list(entry.values())[0]["printouts"]
+    entry_values = list(dict_of_entries.values())[0]["printouts"]
     expected = create_expected_latex("(Bahth fī) uṣūl al-fiqh", "بحث في) أصول الفقه)")
     assert convert.to_entry_with_commentary(entry_values) == expected

@@ -21,11 +21,13 @@ class TubMediaWikiService:
     def __init__(self, http_library):
         self.http_library = http_library
 
-    def semantic_search(self, semantic_query: str) -> dict:
+    def semantic_search(self, semantic_query: str) -> list:
         logging.info("Connecting to:" + self.url)
         response = self.http_library.get(
             self.url + "/api.php?action=ask&format=json&query=" + semantic_query,
             headers=self.headers,
         )
         logging.info("Connection status: Successful")
-        return response.json()["query"]["results"]
+        query_results = response.json()["query"]["results"]
+        values = list(query_results.values())
+        return [element["printouts"] for element in values]
