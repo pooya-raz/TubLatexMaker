@@ -12,7 +12,6 @@ def to_entry_with_commentary(entry: dict) -> str:
     \\newline
     \\newline
     \\textbf{{Description}}
-
     \\newline	
     A short one-line description.
     \\newline
