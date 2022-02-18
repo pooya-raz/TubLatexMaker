@@ -40,7 +40,9 @@ def add_pre_and_post_commands(pre: str, latex_body: str, post: str) -> str:
 
 def wrap_monograph_without_commentary(latex_body: str) -> str:
     return add_pre_and_post_commands(
-        "\\begin{enumerate}", latex_body, "\\end{enumerate}"
+        "\\section{Monographs without commentary}\n\\begin{enumerate}",
+        latex_body,
+        "\\end{enumerate}",
     )
 
 
