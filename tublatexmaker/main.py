@@ -8,7 +8,7 @@ import os.path
 
 def main():
     tub_mediawiki_service = TubMediaWikiService(requests)
-    query_monograph_no_commentaries = "[[Category:Title]][[Book type::Monograph]][[Has number of commentaries::0]]|?Title (Arabic)|?Title (transliterated)|?Has author(s)|limit=1000"
+    query_monograph_no_commentaries = "[[Category:Title]][[Book type::Monograph]][[Has number of commentaries::0]]|?Title (Arabic)|?Title (transliterated)|?Has author(s)|limit=3"
     list_of_entries = tub_mediawiki_service.semantic_search(
         query_monograph_no_commentaries
     )
