@@ -10,6 +10,11 @@ dict_of_entries = {
         "printouts": {
             "Title (Arabic)": ["بحث في) أصول " "الفقه)"],
             "Title (transliterated)": ["(Bahth " "fī) " "uṣūl " "al-fiqh"],
+            "Has author(s)": [{"fulltext": "Muḥammad Jawād b. Aḥmad"}],
+            "Death (Hijri)": [1299],
+            "Death (Gregorian)": [{"timestamp": "-2776982400", "raw": "1/1882"}],
+            "Death (Hijri) text": ["13th century"],
+            "Death (Gregorian) text": ["19th century"],
         },
     }
 }
@@ -52,3 +57,13 @@ def test_convert_to_entry():
     entry_values = list(dict_of_entries.values())[0]["printouts"]
     expected = create_expected_latex("(Bahth fī) uṣūl al-fiqh", "بحث في) أصول الفقه)")
     assert convert.to_entry_with_commentary(entry_values) == expected
+
+
+def test_create_dates():
+    entry = {
+        "Death (Hijri)": [1299],
+        "Death (Gregorian)": [{"timestamp": "-2776982400", "raw": "1/1882"}],
+        "Death (Hijri) text": ["13th century"],
+        "Death (Gregorian) text": ["19th century"],
+    }
+    assert convert.create_dates(entry) == "(13th century/19th century)"

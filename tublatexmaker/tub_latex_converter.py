@@ -2,6 +2,7 @@ def to_entry_with_commentary(entry: dict) -> str:
     transliterated_title = "".join(entry["Title (transliterated)"])
     arabic_title = entry["Title (Arabic)"][0]
     author = "".join(entry["Has author(s)"][0]["fulltext"])
+    death_dates = create_dates(entry)
     return f"""
       \item \\textbf{{{transliterated_title}}}
         \\newline
@@ -9,7 +10,7 @@ def to_entry_with_commentary(entry: dict) -> str:
         \\newline
         {author}
         \\newline
-        (1059/1649)
+        {death_dates}
         \\newline
         \\newline
         \\textbf{{Description}}
@@ -69,3 +70,16 @@ def wrap_document(latex_body: str) -> str:
 def to_entry(dictionary: dict):
     for entry in dictionary:
         return to_entry_with_commentary(entry)
+
+
+def create_dates(entry: dict) -> str:
+    death_hijri = safe_list_get(entry.get("Death (Hijri) text"), 0, "unknown")
+    death_gregorian = safe_list_get(entry.get("Death (Gregorian) text"), 0, "unknown")
+    return f"({death_hijri}/{death_gregorian})"
+
+
+def safe_list_get(lst: list, index: int, default):
+    try:
+        return lst[index]
+    except IndexError:
+        return default
