@@ -59,6 +59,7 @@ def _make_entry(
     arabic_title: str,
     author: str,
     death_dates: str,
+    description: str,
 ) -> str:
     """Makes an entry"""
 
@@ -74,7 +75,7 @@ def _make_entry(
         \\newline
         \\textbf{{Description}}
         \\newline	
-        A short one-line description.
+        {description}
         \\newline
         \\newline
         \\textbf{{Principle manuscripts}}
@@ -139,11 +140,13 @@ def _create_entries_from_list(list_of_entries: list) -> str:
         transliterated_title = "".join(entry["Title (transliterated)"])
         arabic_title = entry["Title (Arabic)"][0]
         author = "".join(entry["Has author(s)"][0]["fulltext"])
+        description = _safe_list_get(entry.get("Has a description"), 0, "None")
         death_dates = _create_dates(entry)
         result += _make_entry(
             transliterated_title=transliterated_title,
             arabic_title=arabic_title,
             author=author,
             death_dates=death_dates,
+            description=description,
         )
     return result
