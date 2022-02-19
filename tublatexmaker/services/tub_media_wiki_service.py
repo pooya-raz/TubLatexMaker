@@ -35,4 +35,10 @@ class TubMediaWikiService:
         logging.info("Connection status: Successful")
         query_results = response.json()["query"]["results"]
         values = list(query_results.values())
-        return [element["printouts"] for element in values]
+        list_of_entries = []
+        for entry in values:
+            x = entry["printouts"]
+            x["page_name"] = entry["fulltext"]
+            list_of_entries.append(x)
+        return list_of_entries
+        # return [element["printouts"] for element in values]
