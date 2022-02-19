@@ -1,8 +1,27 @@
-def to_entry_with_commentary(entry: dict) -> str:
+# General functions
+
+"""# General Functions
+These are functions that act as interfaces.
+"""
+
+
+def _add_pre_and_post_commands(pre: str, latex_body: str, post: str) -> str:
+    """General function that adds the necessary LaTeX commands to text"""
+    return pre + latex_body + post
+
+
+""" Implementation functions
+Functions that implement the general functions defined above
+
+"""
+
+
+def _to_entry_with_commentary(entry: dict) -> str:
+    """Creates an entry for monographs that have commentaries"""
     transliterated_title = "".join(entry["Title (transliterated)"])
     arabic_title = entry["Title (Arabic)"][0]
     author = "".join(entry["Has author(s)"][0]["fulltext"])
-    death_dates = create_dates(entry)
+    death_dates = _create_dates(entry)
     return f"""
       \item \\textbf{{{transliterated_title}}}
         \\newline
@@ -35,19 +54,15 @@ def to_entry_with_commentary(entry: dict) -> str:
     """
 
 
-def add_pre_and_post_commands(pre: str, latex_body: str, post: str) -> str:
-    return pre + latex_body + post
-
-
-def wrap_monograph_without_commentary(latex_body: str) -> str:
-    return add_pre_and_post_commands(
+def _wrap_monograph_without_commentary(latex_body: str) -> str:
+    return _add_pre_and_post_commands(
         "\\section{Monographs without commentary}\n\\begin{enumerate}",
         latex_body,
         "\\end{enumerate}",
     )
 
 
-def wrap_document(latex_body: str) -> str:
+def _wrap_document(latex_body: str) -> str:
     pre = """
     \\documentclass{article}
     \\usepackage{fontspec,lipsum}
@@ -64,22 +79,36 @@ def wrap_document(latex_body: str) -> str:
     \\end{document}
     """
 
-    return add_pre_and_post_commands(pre, latex_body, post)
+    return _add_pre_and_post_commands(pre, latex_body, post)
 
 
-def to_entry(dictionary: dict):
+def _to_entry(dictionary: dict):
     for entry in dictionary:
-        return to_entry_with_commentary(entry)
+        return _to_entry_with_commentary(entry)
 
 
-def create_dates(entry: dict) -> str:
-    death_hijri = safe_list_get(entry.get("Death (Hijri) text"), 0, "unknown")
-    death_gregorian = safe_list_get(entry.get("Death (Gregorian) text"), 0, "unknown")
+def _create_dates(entry: dict) -> str:
+    death_hijri = _safe_list_get(entry.get("Death (Hijri) text"), 0, "unknown")
+    death_gregorian = _safe_list_get(entry.get("Death (Gregorian) text"), 0, "unknown")
     return f"({death_hijri}/{death_gregorian})"
 
 
-def safe_list_get(lst: list, index: int, default):
+def _safe_list_get(lst: list, index: int, default):
     try:
         return lst[index]
     except IndexError:
         return default
+
+
+"""Public functions
+These functions define the API of the module
+"""
+
+
+def create_document(list_of_entries: list) -> str:
+    latex_of_entries = "".join(
+        [_to_entry_with_commentary(entry) for entry in list_of_entries]
+    )
+    monographs_without_commentary = _wrap_monograph_without_commentary(latex_of_entries)
+    document = _wrap_document(monographs_without_commentary)
+    return document
