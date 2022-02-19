@@ -5,7 +5,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
 
 
 class MediaWikiAPIService(Protocol):
-    """Consumes MediaWiki API"""
+    """Calls a Semantic MediaWiki API"""
 
     def __init__(self):
         ...
@@ -15,6 +15,11 @@ class MediaWikiAPIService(Protocol):
 
 
 class TubMediaWikiService:
+    """
+    Calls the TUB Semantic MediaWiki API
+
+    """
+
     url = "http://144.173.140.108:8080/tub"
     headers = {"user-agent": "my-app/0.0.1"}
 
