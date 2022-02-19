@@ -1,16 +1,44 @@
-# General functions
+"""
+latex_builder.py
+====================================
+A module that creates latex documents
+"""
 
-"""# General Functions
+
+def create_document(list_of_entries: list) -> str:
+    """
+    Creates a complete latex document
+
+    Parameters
+    ---------------------------------
+    list_of_entries
+        A list that contains all entries from the TUB API.
+    """
+    latex_of_entries = "".join(
+        [_to_entry_with_commentary(entry) for entry in list_of_entries]
+    )
+    monographs_without_commentary = _wrap_monograph_without_commentary(latex_of_entries)
+    document = _wrap_document(monographs_without_commentary)
+    return document
+
+
+"""
+General Functions
+=================
+
 These are functions that act as interfaces.
 """
 
 
 def _add_pre_and_post_commands(pre: str, latex_body: str, post: str) -> str:
-    """General function that adds the necessary LaTeX commands to text"""
+    """Adds the necessary LaTeX commands to text"""
     return pre + latex_body + post
 
 
-""" Implementation functions
+""" 
+Implementation functions
+========================
+
 Functions that implement the general functions defined above
 
 """
@@ -98,17 +126,3 @@ def _safe_list_get(lst: list, index: int, default):
         return lst[index]
     except IndexError:
         return default
-
-
-"""Public functions
-These functions define the API of the module
-"""
-
-
-def create_document(list_of_entries: list) -> str:
-    latex_of_entries = "".join(
-        [_to_entry_with_commentary(entry) for entry in list_of_entries]
-    )
-    monographs_without_commentary = _wrap_monograph_without_commentary(latex_of_entries)
-    document = _wrap_document(monographs_without_commentary)
-    return document
