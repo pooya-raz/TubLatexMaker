@@ -35,10 +35,14 @@ class TubMediaWikiService:
         logging.info("Connection status: Successful")
         query_results = response.json()["query"]["results"]
         values = list(query_results.values())
+        return self.__build_entry(values)
+        # return [element["printouts"] for element in values]
+
+    def __build_entry(self, values: list):
+        """Build the entry dicts from the response give by the TUB API"""
         list_of_entries = []
         for entry in values:
             x = entry["printouts"]
             x["page_name"] = entry["fulltext"]
             list_of_entries.append(x)
         return list_of_entries
-        # return [element["printouts"] for element in values]
