@@ -20,22 +20,6 @@ def create_document(list_of_entries: list) -> str:
     return document
 
 
-def _create_entries_from_list(list_of_entries: list) -> str:
-    result = ""
-    for entry in list_of_entries:
-        transliterated_title = "".join(entry["Title (transliterated)"])
-        arabic_title = entry["Title (Arabic)"][0]
-        author = "".join(entry["Has author(s)"][0]["fulltext"])
-        death_dates = _create_dates(entry)
-        result += _make_entry(
-            transliterated_title=transliterated_title,
-            arabic_title=arabic_title,
-            author=author,
-            death_dates=death_dates,
-        )
-    return result
-
-
 """
 General Functions
 =================
@@ -49,12 +33,24 @@ def _add_pre_and_post_commands(pre: str, latex_body: str, post: str) -> str:
     return pre + latex_body + post
 
 
+def _safe_list_get(lst: list, index: int, default):
+    """Returns a default if index is out of bounds"""
+    try:
+        return lst[index]
+    except IndexError:
+        return default
+
+
 """ 
 Implementation functions
 ========================
 
 Functions that implement the general functions defined above
 
+"""
+
+"""
+Pure functions
 """
 
 
@@ -126,19 +122,28 @@ def _wrap_document(latex_body: str) -> str:
     return _add_pre_and_post_commands(pre, latex_body, post)
 
 
-def _to_entry(dictionary: dict):
-    for entry in dictionary:
-        return _make_entry(entry)
-
-
 def _create_dates(entry: dict) -> str:
     death_hijri = _safe_list_get(entry.get("Death (Hijri) text"), 0, "unknown")
     death_gregorian = _safe_list_get(entry.get("Death (Gregorian) text"), 0, "unknown")
     return f"({death_hijri}/{death_gregorian})"
 
 
-def _safe_list_get(lst: list, index: int, default):
-    try:
-        return lst[index]
-    except IndexError:
-        return default
+"""
+Functions that deal with side-effects
+"""
+
+
+def _create_entries_from_list(list_of_entries: list) -> str:
+    result = ""
+    for entry in list_of_entries:
+        transliterated_title = "".join(entry["Title (transliterated)"])
+        arabic_title = entry["Title (Arabic)"][0]
+        author = "".join(entry["Has author(s)"][0]["fulltext"])
+        death_dates = _create_dates(entry)
+        result += _make_entry(
+            transliterated_title=transliterated_title,
+            arabic_title=arabic_title,
+            author=author,
+            death_dates=death_dates,
+        )
+    return result
