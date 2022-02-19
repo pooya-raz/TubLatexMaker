@@ -56,7 +56,7 @@ def create_expected_latex(transliterated_title: str, arabic_title: str) -> str:
 def test_convert_to_entry():
     entry_values = list(dict_of_entries.values())[0]["printouts"]
     expected = create_expected_latex("(Bahth fī) uṣūl al-fiqh", "بحث في) أصول الفقه)")
-    assert convert._to_entry_with_commentary(entry_values) == expected
+    assert convert._make_entry(entry_values) == expected
 
 
 def test_create_dates():

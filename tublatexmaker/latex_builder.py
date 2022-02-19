@@ -14,12 +14,26 @@ def create_document(list_of_entries: list) -> str:
     list_of_entries
         A list that contains all entries from the TUB API.
     """
-    latex_of_entries = "".join(
-        [_to_entry_with_commentary(entry) for entry in list_of_entries]
-    )
+    latex_of_entries = _create_entries_from_list(list_of_entries)
     monographs_without_commentary = _wrap_monograph_without_commentary(latex_of_entries)
     document = _wrap_document(monographs_without_commentary)
     return document
+
+
+def _create_entries_from_list(list_of_entries: list) -> str:
+    result = ""
+    for entry in list_of_entries:
+        transliterated_title = "".join(entry["Title (transliterated)"])
+        arabic_title = entry["Title (Arabic)"][0]
+        author = "".join(entry["Has author(s)"][0]["fulltext"])
+        death_dates = _create_dates(entry)
+        result += _make_entry(
+            transliterated_title=transliterated_title,
+            arabic_title=arabic_title,
+            author=author,
+            death_dates=death_dates,
+        )
+    return result
 
 
 """
@@ -44,12 +58,14 @@ Functions that implement the general functions defined above
 """
 
 
-def _to_entry_with_commentary(entry: dict) -> str:
-    """Creates an entry for monographs that have commentaries"""
-    transliterated_title = "".join(entry["Title (transliterated)"])
-    arabic_title = entry["Title (Arabic)"][0]
-    author = "".join(entry["Has author(s)"][0]["fulltext"])
-    death_dates = _create_dates(entry)
+def _make_entry(
+    transliterated_title: str,
+    arabic_title: str,
+    author: str,
+    death_dates: str,
+) -> str:
+    """Makes an entry"""
+
     return f"""
       \item \\textbf{{{transliterated_title}}}
         \\newline
@@ -112,7 +128,7 @@ def _wrap_document(latex_body: str) -> str:
 
 def _to_entry(dictionary: dict):
     for entry in dictionary:
-        return _to_entry_with_commentary(entry)
+        return _make_entry(entry)
 
 
 def _create_dates(entry: dict) -> str:
