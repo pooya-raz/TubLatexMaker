@@ -41,6 +41,11 @@ def _safe_list_get(lst: list, index: int, default):
         return default
 
 
+def _safe_get(dictionary: dict, key: str) -> str:
+    return _safe_list_get(dictionary.get(key), 0, "unknown")
+
+
+
 """ 
 Implementation functions
 ========================
@@ -60,10 +65,11 @@ def _make_entry(
     author: str,
     death_dates: str,
     description: str,
+    manuscripts: list,
 ) -> str:
     """Makes an entry"""
 
-    return f"""
+    first_section = f"""
       \item \\textbf{{{transliterated_title}}}
         \\newline
         \\textarabic{{{arabic_title}}}
@@ -93,6 +99,8 @@ def _make_entry(
         This commentary.
         \\newline
     """
+    first_section += _make_manuscript_section(manuscripts)
+    return first_section
 
 
 def _wrap_monograph_without_commentary(latex_body: str) -> str:
@@ -129,6 +137,46 @@ def _create_dates(entry: dict) -> str:
     return f"({death_hijri}/{death_gregorian})"
 
 
+def _get_manuscript_gregorian_dates(manuscript: dict) -> str:
+    year = _safe_get(manuscript, "Has year(Gregorian)")
+    if year == "unknown":
+        year = _safe_get(manuscript, "Has year(Gregorian) text")
+    return year
+
+
+def _get_manuscript_hijri_dates(manuscript: dict) -> str:
+    year = _safe_get(manuscript, "Has year(Hijri)")
+    if year == "unknown":
+        year = _safe_get(manuscript, "Has year(Hijri) text")
+    return year
+
+
+def _make_manuscript_entry(manuscript: dict) -> str:
+    location = _safe_get(manuscript, "Has a location")
+    year_gregorian = _get_manuscript_gregorian_dates(manuscript)
+    year_hijri = _get_manuscript_hijri_dates(manuscript)
+    print(manuscript.get("Located in a city", "not found"))
+    city = manuscript.get("Located in a city", [{"fulltext": "unknown"}])[0].get("fulltext")
+    manuscript_number = _safe_get(manuscript, "Manuscript number")
+
+    return f"""
+    \\item
+    location = {location}
+    year_gregorian = {year_gregorian}
+    year_hijri = {year_hijri}
+    city = {city}
+    manuscript_number = {manuscript_number}
+    
+    """
+
+
+def _make_manuscript_section(list_of_manuscripts: list) -> str:
+    manuscript_section = ""
+    for manuscript in list_of_manuscripts:
+        manuscript_section += _make_manuscript_entry(manuscript)
+    manuscript_section = _add_pre_and_post_commands(f"\\textbf{{Principle Manuscripts}}\n\\begin{{enumerate}}", manuscript_section, "\\end{{enumerate}}\n\\newline")
+    return manuscript_section
+
 """
 Functions that deal with side-effects
 """
@@ -142,11 +190,14 @@ def _create_entries_from_list(list_of_entries: list) -> str:
         author = "".join(entry["Has author(s)"][0]["fulltext"])
         description = _safe_list_get(entry.get("Has a description"), 0, "None")
         death_dates = _create_dates(entry)
+        manuscripts = entry["manuscripts"]
         result += _make_entry(
             transliterated_title=transliterated_title,
             arabic_title=arabic_title,
             author=author,
             death_dates=death_dates,
             description=description,
+            manuscripts=manuscripts,
+
         )
     return result
