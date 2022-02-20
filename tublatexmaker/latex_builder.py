@@ -174,7 +174,10 @@ def _make_manuscript_section(list_of_manuscripts: list) -> str:
     manuscript_section = ""
     for manuscript in list_of_manuscripts:
         manuscript_section += _make_manuscript_entry(manuscript)
-    manuscript_section = _add_pre_and_post_commands(f"\\textbf{{Principle Manuscripts}}\n\\begin{{enumerate}}", manuscript_section, "\\end{{enumerate}}\n\\newline")
+    manuscript_section = _add_pre_and_post_commands(
+        f"\\textbf{{Principle Manuscripts}}\n\\begin{{enumerate}}",
+        manuscript_section,
+        "\\end{{enumerate}}\n\\newline")
     return manuscript_section
 
 """
