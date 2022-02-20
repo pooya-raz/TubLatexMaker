@@ -46,3 +46,12 @@ class TubMediaWikiService:
             x["page_name"] = entry["fulltext"]
             list_of_entries.append(x)
         return list_of_entries
+
+    def get_manuscripts(self, entries: list) -> list:
+        list_of_entries = []
+        for entry in entries:
+            logging.info("Getting manuscript for: " + entry["page_name"])
+            query = f"[[Has base text::{entry['page_name']}]]|?Title (Arabic)|?Title (transliterated)|?Has author(s)|?Has author(s).Death (Hijri)|?Has author(s).Death (Gregorian)|?Has author(s).Death (Hijri) text|?Has author(s).Death (Gregorian) text|?Has a description|limit=1000"
+            entry["manuscripts"] = self.semantic_search(query)
+            list_of_entries.append(entry)
+        return list_of_entries

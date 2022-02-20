@@ -13,11 +13,13 @@ from tublatexmaker.services.file_writer_service import write_to_file
 def main():
     """Executes the program"""
     tub_mediawiki_service = TubMediaWikiService(requests)
-    query_monograph_no_commentaries = "[[Category:Title]][[Book type::Monograph]][[Has number of commentaries::0]]|?Title (Arabic)|?Title (transliterated)|?Has author(s)|?Has author(s).Death (Hijri)|?Has author(s).Death (Gregorian)|?Has author(s).Death (Hijri) text|?Has author(s).Death (Gregorian) text|?Has a description|limit=1000"
+    query_monograph_no_commentaries = "[[Category:Title]][[Book type::Monograph]][[Has number of commentaries::0]]|?Title (Arabic)|?Title (transliterated)|?Has author(s)|?Has author(s).Death (Hijri)|?Has author(s).Death (Gregorian)|?Has author(s).Death (Hijri) text|?Has author(s).Death (Gregorian) text|?Has a description|limit=3"
     list_of_entries = tub_mediawiki_service.semantic_search(
         query_monograph_no_commentaries
     )
-    document = create_document(list_of_entries)
+    new_list = tub_mediawiki_service.get_manuscripts(list_of_entries)
+    print(new_list)
+    document = create_document(new_list)
     write_to_file("output", document)
 
 
