@@ -39,7 +39,6 @@ class TubMediaWikiService:
             return []
         values = list(query_results.values())
         return self.__build_entry(values)
-        # return [element["printouts"] for element in values]
 
     def __build_entry(self, values: list):
         """Build the entry dicts from the response give by the TUB API"""
