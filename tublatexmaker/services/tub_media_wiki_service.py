@@ -1,7 +1,7 @@
 import logging
 from typing import Protocol, runtime_checkable
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(message)s")
 
 
 class MediaWikiAPIService(Protocol):
@@ -33,7 +33,10 @@ class TubMediaWikiService:
             headers=self.headers,
         )
         logging.info("Connection status: Successful")
+        logging.debug(response.json())
         query_results = response.json()["query"]["results"]
+        if not query_results:
+            return []
         values = list(query_results.values())
         return self.__build_entry(values)
         # return [element["printouts"] for element in values]
@@ -51,7 +54,9 @@ class TubMediaWikiService:
         list_of_entries = []
         for entry in entries:
             logging.info("Getting manuscript for: " + entry["page_name"])
-            query = f"[[Has base text::{entry['page_name']}]]|?Title (Arabic)|?Title (transliterated)|?Has author(s)|?Has author(s).Death (Hijri)|?Has author(s).Death (Gregorian)|?Has author(s).Death (Hijri) text|?Has author(s).Death (Gregorian) text|?Has a description|limit=1000"
+            query = f"[[Manuscript of title::{entry['page_name']}]]|?Has a location|?Has year(Gregorian)|?Has year(Gregorian) text|?Has year(Hijri)|?Has year(Hijri) text|?Located in a city|?Manuscript number|?Manuscript of title"
             entry["manuscripts"] = self.semantic_search(query)
             list_of_entries.append(entry)
+        logging.debug("From get_manuscripts:")
+        logging.debug(list_of_entries)
         return list_of_entries
