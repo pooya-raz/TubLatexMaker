@@ -160,13 +160,7 @@ def _make_manuscript_entry(manuscript: dict) -> str:
     manuscript_number = _safe_get(manuscript, "Manuscript number")
 
     return f"""
-    \\item
-    location = {location}
-    year_gregorian = {year_gregorian}
-    year_hijri = {year_hijri}
-    city = {city}
-    manuscript_number = {manuscript_number}
-    
+    \\item {location},{city} (\\#{manuscript_number}), dated {year_hijri}/{year_gregorian}
     """
 
 
@@ -174,10 +168,11 @@ def _make_manuscript_section(list_of_manuscripts: list) -> str:
     manuscript_section = ""
     for manuscript in list_of_manuscripts:
         manuscript_section += _make_manuscript_entry(manuscript)
+
     manuscript_section = _add_pre_and_post_commands(
-        f"\\textbf{{Principle Manuscripts}}\n\\begin{{enumerate}}",
+        "\\textbf{Principle Manuscripts}\n\\begin{enumerate}",
         manuscript_section,
-        "\\end{{enumerate}}\n\\newline")
+        "\\end{enumerate}\n")
     return manuscript_section
 
 """
