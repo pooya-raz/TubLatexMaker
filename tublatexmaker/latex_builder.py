@@ -105,7 +105,7 @@ def _wrap_document(latex_body: str) -> str:
     \\defaultfontfeatures{Ligatures=TeX}
     \\usepackage[small,sf,bf]{titlesec}
     \\setromanfont{Gentium Plus}
-    \\newfontfamily\\arabicfont[]{Al Bayan}
+    \\newfontfamily\\arabicfont[Script=Arabic]{Amiri}
     \\usepackage{polyglossia}
     \\setmainlanguage{english}
     \\setotherlanguage{arabic}
