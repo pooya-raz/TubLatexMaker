@@ -59,3 +59,14 @@ class TubMediaWikiService:
         logging.debug("From get_manuscripts:")
         logging.debug(list_of_entries)
         return list_of_entries
+
+    def get_editions(self, entries: list) -> list:
+        list_of_entries = []
+        for entry in entries:
+            logging.info("Getting editions for: " + entry["page_name"])
+            query = f"[[Edition of title::{entry['page_name']}]]|?City|?Edition type|?Has a publisher|?Has editor(s)|?Published edition of title|?Sort title|?Title (Arabic)|?Title (transliterated)|?Year (Gregorian)|?Year (Gregorian) text|?Year (Hijri)|?Year (Hijri) text"
+            entry["editions"] = self.semantic_search(query)
+            list_of_entries.append(entry)
+        logging.debug("From get_editions")
+        logging.debug(list_of_entries)
+        return list_of_entries

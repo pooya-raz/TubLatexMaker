@@ -18,8 +18,9 @@ def main():
         query_monograph_no_commentaries
     )
     new_list = tub_mediawiki_service.get_manuscripts(list_of_entries)
-    print(new_list)
-    document = create_document(new_list)
+    new_new_list = tub_mediawiki_service.get_editions(new_list)
+    print(new_new_list)
+    document = create_document(new_new_list)
     write_to_file("output", document)
 
 
