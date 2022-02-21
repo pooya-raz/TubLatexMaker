@@ -19,6 +19,71 @@ dict_of_entries = {
     }
 }
 
+edition = [
+    {
+        "City": [
+            {
+                "fulltext": "Qum",
+                "fullurl": "http://144.173.140.108:8080/tub/index.php/Qum",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": "Qom",
+            }
+        ],
+        "Edition type": ["Modern print"],
+        "Has a publisher": ["Majmaʿ al-Fikr al-Islāmī"],
+        "Has editor(s)": ["unknown"],
+        "Published edition of title": [
+            {
+                "fulltext": "al-Fawāʾid al-Ḥāʾiriyya",
+                "fullurl": "http://144.173.140.108:8080/tub/index.php/al-Faw%C4%81%CA%BEid_al-%E1%B8%A4%C4%81%CA%BEiriyya",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": "",
+            }
+        ],
+        "Sort title": ["al-Fawaid al-Ḥairiyya"],
+        "Title (Arabic)": ["الفوائد الحائرية"],
+        "Title (transliterated)": ["al-Fawāʾid al-Ḥāʾiriyya"],
+        "Year (Gregorian)": [],
+        "Year (Gregorian) text": [],
+        "Year (Hijri)": [],
+        "Year (Hijri) text": [],
+        "page_name": "Edition:al-Fawāʾid al-Ḥāʾiriyya",
+    },
+    {
+        "City": [
+            {
+                "fulltext": "Qum",
+                "fullurl": "http://144.173.140.108:8080/tub/index.php/Qum",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": "Qom",
+            }
+        ],
+        "Edition type": ["Modern print"],
+        "Has a publisher": ["Majmaʿ al-Fikr al-Islāmī"],
+        "Has editor(s)": ["unknown"],
+        "Published edition of title": [
+            {
+                "fulltext": "al-Fawāʾid al-Ḥāʾiriyya",
+                "fullurl": "http://144.173.140.108:8080/tub/index.php/al-Faw%C4%81%CA%BEid_al-%E1%B8%A4%C4%81%CA%BEiriyya",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": "",
+            }
+        ],
+        "Sort title": ["al-Fawaid al-Ḥairiyya"],
+        "Title (Arabic)": ["الفوائد الحائرية"],
+        "Title (transliterated)": ["al-Fawāʾid al-Ḥāʾiriyya"],
+        "Year (Gregorian)": [],
+        "Year (Gregorian) text": [],
+        "Year (Hijri)": [],
+        "Year (Hijri) text": [],
+        "page_name": "Edition:al-Fawāʾid al-Ḥāʾiriyya (1415/1994)",
+    },
+]
+
 
 def create_expected_latex(transliterated_title: str, arabic_title: str) -> str:
     return f"""
@@ -53,10 +118,12 @@ def create_expected_latex(transliterated_title: str, arabic_title: str) -> str:
     """
 
 
+"""
 def test_convert_to_entry():
     entry_values = list(dict_of_entries.values())[0]["printouts"]
     expected = create_expected_latex("(Bahth fī) uṣūl al-fiqh", "بحث في) أصول الفقه)")
     assert convert._make_entry(entry_values) == expected
+"""
 
 
 def test_create_dates():
@@ -67,3 +134,14 @@ def test_create_dates():
         "Death (Gregorian) text": ["19th century"],
     }
     assert convert._create_dates(entry) == "(13th century/19th century)"
+
+
+def test_make_editions():
+    assert (
+        convert._make_editions_section(edition)
+        == """
+    \\textbf{Editions}\n\\begin{itemize}
+    \\item
+    \\end{itemize}\n
+    """
+    )
