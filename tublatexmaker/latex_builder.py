@@ -155,7 +155,6 @@ def _make_manuscript_entry(manuscript: dict) -> str:
     location = _safe_get(manuscript, "Has a location")
     year_gregorian = _get_manuscript_gregorian_dates(manuscript)
     year_hijri = _get_manuscript_hijri_dates(manuscript)
-    print(manuscript.get("Located in a city", "not found"))
     city = manuscript.get("Located in a city", [{"fulltext": "unknown"}])[0].get("fulltext")
     manuscript_number = _safe_get(manuscript, "Manuscript number")
 
