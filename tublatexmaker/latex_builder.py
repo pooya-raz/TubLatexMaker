@@ -42,7 +42,7 @@ def _safe_list_get(lst: list, index: int, default):
 
 
 def _safe_get(dictionary: dict, key: str) -> str:
-    return _safe_list_get(dictionary.get(key), 0, "unknown")
+    return _safe_list_get(dictionary.get(key), 0, "no data")
 
 
 """ 
@@ -119,21 +119,21 @@ def _wrap_document(latex_body: str) -> str:
 
 
 def _create_dates(entry: dict) -> str:
-    death_hijri = _safe_list_get(entry.get("Death (Hijri) text"), 0, "unknown")
-    death_gregorian = _safe_list_get(entry.get("Death (Gregorian) text"), 0, "unknown")
+    death_hijri = _safe_list_get(entry.get("Death (Hijri) text"), 0, "no data")
+    death_gregorian = _safe_list_get(entry.get("Death (Gregorian) text"), 0, "no data")
     return f"({death_hijri}/{death_gregorian})"
 
 
 def _get_manuscript_gregorian_dates(manuscript: dict) -> str:
     year = _safe_get(manuscript, "Has year(Gregorian) text")
-    if year == "unknown":
+    if year == "no data":
         year = _safe_get(manuscript, "Has year(Gregorian)")
     return year
 
 
 def _get_manuscript_hijri_dates(manuscript: dict) -> str:
     year = _safe_get(manuscript, "Has year(Hijri) text")
-    if year == "unknown":
+    if year == "no data":
         year = _safe_get(manuscript, "Has year(Hijri)")
     return year
 
@@ -142,7 +142,7 @@ def _make_manuscript_entry(manuscript: dict) -> str:
     location = _safe_get(manuscript, "Has a location")
     year_gregorian = _get_manuscript_gregorian_dates(manuscript)
     year_hijri = _get_manuscript_hijri_dates(manuscript)
-    city = manuscript.get("Located in a city", [{"fulltext": "unknown"}])[0].get(
+    city = manuscript.get("Located in a city", [{"fulltext": "no data"}])[0].get(
         "fulltext"
     )
     manuscript_number = _safe_get(manuscript, "Manuscript number")
@@ -173,7 +173,11 @@ def _make_editions_section(list_of_editions: list) -> str:
         editor = " (ed. " + _safe_get(edition_entry, "Has editor(s)") + ")"
         edition_type = _safe_get(edition_entry, "Edition type")
         publisher = _safe_get(edition_entry, "Has a publisher")
-        city = edition_entry.get("City", [{"fulltext": "unknown"}])[0].get("fulltext")
+        city = _safe_list_get(
+            edition_entry.get("City", [{"fulltext": "no data"}]),
+            0,
+            {"fulltext": "no data"},
+        ).get("fulltext")
         date_gregorian = _get_manuscript_gregorian_dates(edition_entry)
         date_original = _get_manuscript_hijri_dates(edition_entry)
         return f"""
