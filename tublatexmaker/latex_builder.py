@@ -45,7 +45,6 @@ def _safe_get(dictionary: dict, key: str) -> str:
     return _safe_list_get(dictionary.get(key), 0, "unknown")
 
 
-
 """ 
 Implementation functions
 ========================
@@ -66,10 +65,11 @@ def _make_entry(
     death_dates: str,
     description: str,
     manuscripts: list,
+    editions: list,
 ) -> str:
     """Makes an entry"""
 
-    first_section = f"""
+    latex = f"""
       \item \\textbf{{{transliterated_title}}}
         \\newline
         \\textarabic{{{arabic_title}}}
@@ -85,8 +85,9 @@ def _make_entry(
         \\newline
         \\newline
     """
-    first_section += _make_manuscript_section(manuscripts)
-    return first_section
+    latex += _make_manuscript_section(manuscripts)
+    latex += _make_editions_section(editions)
+    return latex
 
 
 def _wrap_monograph_without_commentary(latex_body: str) -> str:
@@ -141,7 +142,9 @@ def _make_manuscript_entry(manuscript: dict) -> str:
     location = _safe_get(manuscript, "Has a location")
     year_gregorian = _get_manuscript_gregorian_dates(manuscript)
     year_hijri = _get_manuscript_hijri_dates(manuscript)
-    city = manuscript.get("Located in a city", [{"fulltext": "unknown"}])[0].get("fulltext")
+    city = manuscript.get("Located in a city", [{"fulltext": "unknown"}])[0].get(
+        "fulltext"
+    )
     manuscript_number = _safe_get(manuscript, "Manuscript number")
 
     return f"""
@@ -159,8 +162,37 @@ def _make_manuscript_section(list_of_manuscripts: list) -> str:
     manuscript_section = _add_pre_and_post_commands(
         "\\textbf{Principle Manuscripts}\n\\begin{itemize}",
         manuscript_section,
-        "\\end{itemize}\n")
+        "\\end{itemize}\n",
+    )
     return manuscript_section
+
+
+def _make_editions_section(list_of_editions: list) -> str:
+    def make_edition_entry(edition_entry: dict) -> str:
+        title = _safe_get(edition_entry, "Title (transliterated)")
+        editor = " (ed. " + _safe_get(edition_entry, "Has editor(s)") + ")"
+        edition_type = _safe_get(edition_entry, "Edition type")
+        publisher = _safe_get(edition_entry, "Has a publisher")
+        city = edition_entry.get("City", [{"fulltext": "unknown"}])[0].get("fulltext")
+        date_gregorian = _get_manuscript_gregorian_dates(edition_entry)
+        date_original = _get_manuscript_hijri_dates(edition_entry)
+        return f"""
+        \\item \\emph{{{title}}}{editor}, {edition_type}, {publisher}, {city}, {date_original}/{date_gregorian}
+        """
+
+    if not list_of_editions:
+        return "\\textbf{Editions}\n\\newline\nNone\\newline"
+    edition_section = ""
+    for edition in list_of_editions:
+        edition_section += make_edition_entry(edition)
+
+    edition_section = _add_pre_and_post_commands(
+        "\\textbf{Editions}\n\\begin{itemize}",
+        edition_section,
+        "\\end{itemize}\n",
+    )
+    return edition_section
+
 
 """
 Functions that deal with side-effects
@@ -176,6 +208,7 @@ def _create_entries_from_list(list_of_entries: list) -> str:
         description = _safe_list_get(entry.get("Has a description"), 0, "None")
         death_dates = _create_dates(entry)
         manuscripts = entry["manuscripts"]
+        editions = entry["editions"]
         result += _make_entry(
             transliterated_title=transliterated_title,
             arabic_title=arabic_title,
@@ -183,6 +216,6 @@ def _create_entries_from_list(list_of_entries: list) -> str:
             death_dates=death_dates,
             description=description,
             manuscripts=manuscripts,
-
+            editions=editions,
         )
     return result
