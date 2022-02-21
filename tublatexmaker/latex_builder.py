@@ -84,20 +84,6 @@ def _make_entry(
         {description}
         \\newline
         \\newline
-        \\textbf{{Principle manuscripts}}
-        \\newline
-        This manuscript
-        \\newline
-        \\newline
-        \\textbf{{Editions}}
-        \\newline
-        This edition.
-        \\newline
-        \\newline
-        \\textbf{{Commentaries}}
-        \\newline
-        This commentary.
-        \\newline
     """
     first_section += _make_manuscript_section(manuscripts)
     return first_section
@@ -138,16 +124,16 @@ def _create_dates(entry: dict) -> str:
 
 
 def _get_manuscript_gregorian_dates(manuscript: dict) -> str:
-    year = _safe_get(manuscript, "Has year(Gregorian)")
+    year = _safe_get(manuscript, "Has year(Gregorian) text")
     if year == "unknown":
-        year = _safe_get(manuscript, "Has year(Gregorian) text")
+        year = _safe_get(manuscript, "Has year(Gregorian)")
     return year
 
 
 def _get_manuscript_hijri_dates(manuscript: dict) -> str:
-    year = _safe_get(manuscript, "Has year(Hijri)")
+    year = _safe_get(manuscript, "Has year(Hijri) text")
     if year == "unknown":
-        year = _safe_get(manuscript, "Has year(Hijri) text")
+        year = _safe_get(manuscript, "Has year(Hijri)")
     return year
 
 
@@ -159,19 +145,21 @@ def _make_manuscript_entry(manuscript: dict) -> str:
     manuscript_number = _safe_get(manuscript, "Manuscript number")
 
     return f"""
-    \\item {location},{city} (\\#{manuscript_number}), dated {year_hijri}/{year_gregorian}
+    \\item {location}, {city} (\\#{manuscript_number}), dated {year_hijri}/{year_gregorian}
     """
 
 
 def _make_manuscript_section(list_of_manuscripts: list) -> str:
+    if not list_of_manuscripts:
+        return "\\textbf{Principle Manuscripts}\n\\newline\nNone\\newline"
     manuscript_section = ""
     for manuscript in list_of_manuscripts:
         manuscript_section += _make_manuscript_entry(manuscript)
 
     manuscript_section = _add_pre_and_post_commands(
-        "\\textbf{Principle Manuscripts}\n\\begin{enumerate}",
+        "\\textbf{Principle Manuscripts}\n\\begin{itemize}",
         manuscript_section,
-        "\\end{enumerate}\n")
+        "\\end{itemize}\n")
     return manuscript_section
 
 """
