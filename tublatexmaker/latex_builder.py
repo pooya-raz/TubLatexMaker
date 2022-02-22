@@ -155,7 +155,13 @@ def _wrap_document(latex_body: str) -> str:
     \\usepackage{polyglossia}
     \\setmainlanguage{english}
     \\setotherlanguage{arabic}
+    \\title{Twelver Usul Bibliography}
+    \\author{The TUB Team}
+    \\date{\\today} 
     \\begin{document}
+    \\maketitle
+    \\tableofcontents
+    \\pagebreak
     """
     post = """
     \\end{document}
