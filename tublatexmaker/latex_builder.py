@@ -264,20 +264,7 @@ def _make_commentaries_section(list_of_commentaries: list) -> str:
         description = _safe_list_get(commentary_entry.get("Has a catalogue description"), 0, "None")
         death_dates = _create_dates(commentary_entry)
         latex = f"""
-              \item \\textbf{{{transliterated_title}}}
-                \\newline
-                \\textarabic{{{arabic_title}}}
-                \\newline
-                {author}
-                \\newline
-                {death_dates}
-                \\newline
-                \\newline
-                \\textbf{{Description}}
-                \\newline	
-                {description}
-                \\newline
-                \\newline
+              \item \\emph{{{transliterated_title}}}, {author} {death_dates}
             """
         return latex
 
