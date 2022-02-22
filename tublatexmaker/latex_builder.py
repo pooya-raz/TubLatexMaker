@@ -5,18 +5,56 @@ A module that creates latex documents
 """
 
 
-def create_document(list_of_entries: list) -> str:
+def create_document(mediawiki_service):
+    monographs_with_commentaries= create_section("Monographs with commentaries", mediawiki_service)
+    monographs_without_commentaries = create_section("Monographs without commentaries", mediawiki_service)
+    treatise = create_section("Treatise (risāla)", mediawiki_service)
+    commentary = create_section("Commentary (sharḥ)", mediawiki_service)
+    gloss = create_section("Gloss (ḥāshīyah)", mediawiki_service)
+    marginal_notes = create_section("Marginal notes (taʿlīqa)", mediawiki_service)
+    summary = create_section("Summary (khulāṣa/mukhtaṣar)", mediawiki_service)
+    poem = create_section("Poem (manẓūma)", mediawiki_service)
+    refutation = create_section("Refutation (radd)", mediawiki_service)
+    taqrirat = create_section("Taqrīrāt", mediawiki_service)
+    translation = create_section(" Translation", mediawiki_service)
+    full_text = piece_document_together(
+        monographs_with_commentaries
+        + monographs_without_commentaries
+        + commentary
+        + gloss
+        + marginal_notes
+        + treatise
+        + summary
+        + poem
+        + refutation
+        + taqrirat
+        + translation
+    )
+    full_text = full_text.replace(" #", "\\#")
+    full_text = full_text.replace("&", "\\&")
+    return full_text
+
+def create_section(section_heading: str, mediawiki_service) -> str:
+    query =f"[[Category:Title]][[Book type::{section_heading}]]|?Title (Arabic)|?Title (transliterated)|?Has author(s)|?Has author(s).Death (Hijri)|?Has author(s).Death (Gregorian)|?Has author(s).Death (Hijri) text|?Has author(s).Death (Gregorian) text|?Has a catalogue description|limit=5|sort=Has author(s).Death (Hijri)|order=asc"
+    if section_heading == "Monographs without commentaries":
+        query = "[[Category:Title]][[Book type::Monograph]][[Has number of commentaries::0]]|?Title (Arabic)|?Title (transliterated)|?Has author(s)|?Has author(s).Death (Hijri)|?Has author(s).Death (Gregorian)|?Has author(s).Death (Hijri) text|?Has author(s).Death (Gregorian) text|?Has a catalogue description|limit=5|sort=Has author(s).Death (Hijri)|order=asc"
+    if section_heading == "Monographs with commentaries":
+        query = "[[Category:Title]][[Book type::Monograph]][[Has number of commentaries::>>0]]|?Title (Arabic)|?Title (transliterated)|?Has author(s)|?Has author(s).Death (Hijri)|?Has author(s).Death (Gregorian)|?Has author(s).Death (Hijri) text|?Has author(s).Death (Gregorian) text|?Has a catalogue description|limit=5|sort=Has author(s).Death (Hijri)|order=asc"
+
+    entries = mediawiki_service.semantic_search(query)
+    entries_with_manuscripts = mediawiki_service.get_manuscripts(entries)
+    entries_with_manuscripts_and_editions = mediawiki_service.get_editions(entries_with_manuscripts)
+    latex_of_entries = _create_entries_from_list(entries_with_manuscripts_and_editions)
+    return _wrap_section(latex_of_entries, section_heading)
+
+
+def piece_document_together(latex_body: str) -> str:
     """
     Creates a complete latex document
 
-    Parameters
-    ---------------------------------
-    list_of_entries
-        A list that contains all entries from the TUB API.
+        :param latex_body:
     """
-    latex_of_entries = _create_entries_from_list(list_of_entries)
-    monographs_without_commentary = _wrap_monograph_without_commentary(latex_of_entries)
-    document = _wrap_document(monographs_without_commentary)
+    document = _wrap_document(latex_body)
     return document
 
 
@@ -90,12 +128,14 @@ def _make_entry(
     return latex
 
 
-def _wrap_monograph_without_commentary(latex_body: str) -> str:
+def _wrap_section(latex_body: str,section_heading: str) -> str:
     return _add_pre_and_post_commands(
-        "\\section{Monographs without commentary}\n\\begin{enumerate}",
+        f"\\section{{{section_heading}}}\n\\begin{{enumerate}}",
         latex_body,
         "\\end{enumerate}",
     )
+
+
 
 
 def _wrap_document(latex_body: str) -> str:
@@ -142,7 +182,7 @@ def _make_manuscript_entry(manuscript: dict) -> str:
     location = _safe_get(manuscript, "Has a location")
     year_gregorian = _get_manuscript_gregorian_dates(manuscript)
     year_hijri = _get_manuscript_hijri_dates(manuscript)
-    city = manuscript.get("Located in a city", [{"fulltext": "no data"}])[0].get(
+    city = _safe_list_get(manuscript.get("Located in a city", [{"fulltext": "no data"}]), 0, {"fulltext": "no data"}).get(
         "fulltext"
     )
     manuscript_number = _safe_get(manuscript, "Manuscript number")
@@ -208,8 +248,8 @@ def _create_entries_from_list(list_of_entries: list) -> str:
     for entry in list_of_entries:
         transliterated_title = "".join(entry["Title (transliterated)"])
         arabic_title = entry["Title (Arabic)"][0]
-        author = "".join(entry["Has author(s)"][0]["fulltext"])
-        description = _safe_list_get(entry.get("Has a description"), 0, "None")
+        author = "".join(_safe_list_get(entry["Has author(s)"], 0, {"fulltext": "no data"})["fulltext"])
+        description = _safe_list_get(entry.get("Has a catalogue description"), 0, "None")
         death_dates = _create_dates(entry)
         manuscripts = entry["manuscripts"]
         editions = entry["editions"]
