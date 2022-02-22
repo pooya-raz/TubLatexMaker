@@ -45,6 +45,9 @@ def create_section(section_heading: str, mediawiki_service) -> str:
     entries_with_manuscripts = mediawiki_service.get_manuscripts(entries)
     entries_with_manuscripts_and_editions = mediawiki_service.get_editions(entries_with_manuscripts)
     latex_of_entries = _create_entries_from_list(entries_with_manuscripts_and_editions)
+    if section_heading == "Monographs with commentaries":
+        entries_with_commentaries = mediawiki_service.get_commentaries(entries)
+        latex_of_entries = _create_entries_from_list(entries_with_commentaries)
     return _wrap_section(latex_of_entries, section_heading)
 
 
@@ -104,6 +107,7 @@ def _make_entry(
     description: str,
     manuscripts: list,
     editions: list,
+    commentaries: list,
 ) -> str:
     """Makes an entry"""
 
@@ -123,6 +127,8 @@ def _make_entry(
         \\newline
         \\newline
     """
+    if commentaries:
+        latex += _make_commentaries_section(commentaries)
     latex += _make_manuscript_section(manuscripts)
     latex += _make_editions_section(editions)
     return latex
@@ -238,6 +244,44 @@ def _make_editions_section(list_of_editions: list) -> str:
     return edition_section
 
 
+def _make_commentaries_section(list_of_commentaries: list) -> str:
+
+    def make_commentary_entry(commentary_entry: dict) -> str:
+        transliterated_title = "".join(commentary_entry["Title (transliterated)"])
+        arabic_title = commentary_entry["Title (Arabic)"][0]
+        author = "".join(_safe_list_get(commentary_entry["Has author(s)"], 0, {"fulltext": "no data"})["fulltext"])
+        description = _safe_list_get(commentary_entry.get("Has a catalogue description"), 0, "None")
+        death_dates = _create_dates(commentary_entry)
+        latex = f"""
+              \item \\textbf{{{transliterated_title}}}
+                \\newline
+                \\textarabic{{{arabic_title}}}
+                \\newline
+                {author}
+                \\newline
+                {death_dates}
+                \\newline
+                \\newline
+                \\textbf{{Description}}
+                \\newline	
+                {description}
+                \\newline
+                \\newline
+            """
+        return latex
+
+    commentary_section = ""
+    for commentary in list_of_commentaries:
+        commentary_section += make_commentary_entry(commentary)
+
+    commentary_section_with_headers = _add_pre_and_post_commands(
+        "\\textbf{Commentaries}\n\\begin{itemize}",
+        commentary_section,
+        "\\end{itemize}\n",
+    )
+    return commentary_section_with_headers
+
+
 """
 Functions that deal with side-effects
 """
@@ -253,6 +297,7 @@ def _create_entries_from_list(list_of_entries: list) -> str:
         death_dates = _create_dates(entry)
         manuscripts = entry["manuscripts"]
         editions = entry["editions"]
+        commentaries = entry.get("commentaries", [])
         result += _make_entry(
             transliterated_title=transliterated_title,
             arabic_title=arabic_title,
@@ -261,5 +306,6 @@ def _create_entries_from_list(list_of_entries: list) -> str:
             description=description,
             manuscripts=manuscripts,
             editions=editions,
+            commentaries=commentaries,
         )
     return result
