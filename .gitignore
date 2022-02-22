@@ -272,3 +272,4 @@ output/*.tex
 output/*.pdf
 output/*.log
 output/*.aux
+output/*.toc
