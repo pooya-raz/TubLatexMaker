@@ -165,8 +165,19 @@ def _wrap_document(latex_body: str) -> str:
 
 
 def _create_dates(entry: dict) -> str:
-    death_hijri = _safe_list_get(entry.get("Death (Hijri) text"), 0, "no data")
-    death_gregorian = _safe_list_get(entry.get("Death (Gregorian) text"), 0, "no data")
+    death_hijri = "no data"
+    death_gregorian = "no data"
+    if entry["Death (Hijri)"]:
+        death_hijri = entry["Death (Hijri)"][0]
+    if entry["Death (Gregorian)"]:
+        death_gregorian_raw = entry["Death (Gregorian)"][0].get("raw")
+        split_raw = death_gregorian_raw.split("/")
+        death_gregorian = split_raw[1]
+    if entry["Death (Hijri) text"]:
+        death_hijri = entry["Death (Hijri) text"][0]
+    if entry["Death (Gregorian) text"]:
+        death_gregorian = entry["Death (Gregorian) text"][0]
+
     return f"({death_hijri}/{death_gregorian})"
 
 
