@@ -46,7 +46,7 @@ def create_section(section_heading: str, mediawiki_service) -> str:
     entries_with_manuscripts_and_editions = mediawiki_service.get_editions(entries_with_manuscripts)
     latex_of_entries = _create_entries_from_list(entries_with_manuscripts_and_editions)
     if section_heading == "Monographs with commentaries":
-        entries_with_commentaries = mediawiki_service.get_commentaries(entries)
+        entries_with_commentaries = mediawiki_service.get_commentaries(entries_with_manuscripts_and_editions)
         latex_of_entries = _create_entries_from_list(entries_with_commentaries)
     return _wrap_section(latex_of_entries, section_heading)
 
@@ -127,10 +127,10 @@ def _make_entry(
         \\newline
         \\newline
     """
-    if commentaries:
-        latex += _make_commentaries_section(commentaries)
     latex += _make_manuscript_section(manuscripts)
     latex += _make_editions_section(editions)
+    if commentaries:
+        latex += _make_commentaries_section(commentaries)
     return latex
 
 
@@ -217,7 +217,7 @@ def _make_manuscript_entry(manuscript: dict) -> str:
 
 def _make_manuscript_section(list_of_manuscripts: list) -> str:
     if not list_of_manuscripts:
-        return "\\textbf{Principle Manuscripts}\n\\newline\nNone\\newline"
+        return "\\textbf{Principle Manuscripts}\n\\newline\nno data\\newline"
     manuscript_section = ""
     for manuscript in list_of_manuscripts:
         manuscript_section += _make_manuscript_entry(manuscript)
@@ -248,7 +248,7 @@ def _make_editions_section(list_of_editions: list) -> str:
         """
 
     if not list_of_editions:
-        return "\\textbf{Editions}\n\\newline\nNone\\newline"
+        return "\\textbf{Editions}\n\\newline\nno data\\newline"
     edition_section = ""
     for edition in list_of_editions:
         edition_section += make_edition_entry(edition)
@@ -267,7 +267,7 @@ def _make_commentaries_section(list_of_commentaries: list) -> str:
         transliterated_title = "".join(commentary_entry["Title (transliterated)"])
         arabic_title = commentary_entry["Title (Arabic)"][0]
         author = "".join(_safe_list_get(commentary_entry["Has author(s)"], 0, {"fulltext": "no data"})["fulltext"])
-        description = _safe_list_get(commentary_entry.get("Has a catalogue description"), 0, "None")
+        description = _safe_list_get(commentary_entry.get("Has a catalogue description"), 0, "no data")
         death_dates = _create_dates(commentary_entry)
         latex = f"""
               \item \\emph{{{transliterated_title}}}, {author} {death_dates}
@@ -297,7 +297,7 @@ def _create_entries_from_list(list_of_entries: list) -> str:
         transliterated_title = "".join(entry["Title (transliterated)"])
         arabic_title = entry["Title (Arabic)"][0]
         author = "".join(_safe_list_get(entry["Has author(s)"], 0, {"fulltext": "no data"})["fulltext"])
-        description = _safe_list_get(entry.get("Has a catalogue description"), 0, "None")
+        description = _safe_list_get(entry.get("Has a catalogue description"), 0, "no data")
         death_dates = _create_dates(entry)
         manuscripts = entry["manuscripts"]
         editions = entry["editions"]
