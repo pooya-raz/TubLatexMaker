@@ -14,60 +14,63 @@ Prerequisites
 -------------
 
 What things you need to install the software and how to install them
-1. Python 3.10
-   - [Follow instructions](https://www.python.org/downloads/) to install appropriate version for your system
-2. Poetry - for dependency management
-   - [Follow installation directions](https://python-poetry.org/docs/).
 
-### Installing
+#. Python 3.10
+    * `Follow instructions <https://www.python.org/downloads/>`_ to install the appropriate version for your system
+#. Poetry - for dependency management
+    * `Follow instructions <https://python-poetry.org/docs/>`_
 
-1. Make sure all prerequisites are installed. See above.
-2. Clone the project
+Installing
+----------
 
-   ```git@github.com:pooya-raz/TubLatexMaker.git```
-3. Install dependencies and environment with Poetry
+#. Make sure all prerequisites are installed. See above.
+#. Clone the project
 
-   ```poetry init```
+   ``git@github.com:pooya-raz/TubLatexMaker.git``
+#. Install dependencies and environment with Poetry
 
-4. Run the program
+   ``poetry init``
 
-   ```poetry run main```
+#. Run the program
+
+   ``poetry run main``
 
 A demo is coming soon.
 
-## Running the tests
-
+Running the tests
+-----------------
 Simply run:
 
-```poetry run pytest```
+``poetry run pytest``
 
-## Built With
+Built With
+----------
+* `Python <https://www.python.org/>`_
+* `Poetry <https://python-poetry.org>`_ - Dependency Management
+* `black <https://black.readthedocs.io/en/stable/>`_  - Code Formatter
+* `Google Python Style Guide <https://google.github.io/styleguide/pyguide.html/>`_
 
-- [Python](https://www.python.org/)
-- [Poetry](https://python-poetry.org) - Dependency Management
-- [black](https://black.readthedocs.io/en/stable/) - Code Formatter
-- [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
 
-## Contributing
+Contributing
+------------
+Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.
 
-Please read [CONTRIBUTING.md]() for details on our code of conduct, and the process for submitting pull requests to us.
+Versioning
+----------
+We use `SemVer <http://semver.org/>`_  for versioning. For the versions available, see the [tags on this repository](https://github.com/pooya-raz/TubLatexMaker/tags).
 
-## Versioning
+Authors
+-------
+* **Christopher Pooya Razavian** - *Initial work* - `pooya-raz <https://github.com/pooya-raz>`_
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/pooya-raz/TubLatexMaker/tags).
+See also the list of `contributors <https://github.com/pooya-raz/TubLatexMaker/graphs/contributors>`_ who participated in this project.
 
-## Authors
-
-* **Christopher Pooya Razavian** - *Initial work* - [pooya-raz](https://github.com/pooya-raz)
-
-See also the list of [contributors](https://github.com/pooya-raz/TubLatexMaker/graphs/contributors) who participated in this project.
-
-## License
-
+License
+--------
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
-## Acknowledgments
-
+Acknowledgments
+----------------
 * European Research Council
 * University of Exeter 
 * Robert Gleave - Principle Investigator
