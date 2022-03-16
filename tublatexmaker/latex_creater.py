@@ -1,8 +1,9 @@
 """
-latex_builder.py
+latex_creater.py
 ====================================
 A module that creates latex documents
 """
+from json_to_latex_converter import *
 
 
 def create_document(mediawiki_service):
@@ -69,11 +70,6 @@ These are functions that act as interfaces.
 """
 
 
-def _add_pre_and_post_commands(pre: str, latex_body: str, post: str) -> str:
-    """Adds the necessary LaTeX commands to text"""
-    return pre + latex_body + post
-
-
 def _safe_list_get(lst: list, index: int, default):
     """Returns a default if index is out of bounds"""
     try:
@@ -135,7 +131,7 @@ def _make_entry(
 
 
 def _wrap_section(latex_body: str,section_heading: str) -> str:
-    return _add_pre_and_post_commands(
+    return add_pre_and_post_commands(
         f"\\section{{{section_heading}}}\n\\begin{{enumerate}}",
         latex_body,
         "\\end{enumerate}",
@@ -167,7 +163,7 @@ def _wrap_document(latex_body: str) -> str:
     \\end{document}
     """
 
-    return _add_pre_and_post_commands(pre, latex_body, post)
+    return add_pre_and_post_commands(pre, latex_body, post)
 
 
 def _create_dates(entry: dict) -> str:
@@ -222,7 +218,7 @@ def _make_manuscript_section(list_of_manuscripts: list) -> str:
     for manuscript in list_of_manuscripts:
         manuscript_section += _make_manuscript_entry(manuscript)
 
-    manuscript_section = _add_pre_and_post_commands(
+    manuscript_section = add_pre_and_post_commands(
         "\\textbf{Principle Manuscripts}\n\\begin{itemize}",
         manuscript_section,
         "\\end{itemize}\n",
@@ -253,7 +249,7 @@ def _make_editions_section(list_of_editions: list) -> str:
     for edition in list_of_editions:
         edition_section += make_edition_entry(edition)
 
-    edition_section = _add_pre_and_post_commands(
+    edition_section = add_pre_and_post_commands(
         "\\textbf{Editions}\n\\begin{itemize}",
         edition_section,
         "\\end{itemize}\n",
@@ -278,7 +274,7 @@ def _make_commentaries_section(list_of_commentaries: list) -> str:
     for commentary in list_of_commentaries:
         commentary_section += make_commentary_entry(commentary)
 
-    commentary_section_with_headers = _add_pre_and_post_commands(
+    commentary_section_with_headers = add_pre_and_post_commands(
         "\\textbf{Commentaries}\n\\begin{itemize}",
         commentary_section,
         "\\end{itemize}\n",

@@ -6,7 +6,7 @@ The core module that executes the program
 
 import requests
 from tublatexmaker.services.tub_media_wiki_service import TubMediaWikiService
-from tublatexmaker.latex_builder import *
+from tublatexmaker.latex_creater import *
 from tublatexmaker.services.file_writer_service import write_to_file
 
 

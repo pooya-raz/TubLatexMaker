@@ -1,4 +1,4 @@
-import tublatexmaker.latex_builder as convert
+import tublatexmaker.latex_creater as convert
 
 dict_of_entries = {
     "(Bahth fī) uṣūl al-fiqh": {
