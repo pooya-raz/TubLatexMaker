@@ -291,7 +291,7 @@ def _create_entries_from_list(list_of_entries: list) -> str:
     result = ""
     for entry in list_of_entries:
         transliterated_title = "".join(entry["Title (transliterated)"])
-        arabic_title = entry["Title (Arabic)"][0]
+        arabic_title = _safe_list_get(entry["Title (Arabic)"], 0, "no data")
         author = "".join(_safe_list_get(entry["Has author(s)"], 0, {"fulltext": "no data"})["fulltext"])
         description = _safe_list_get(entry.get("Has a catalogue description"), 0, "no data")
         death_dates = _create_dates(entry)
