@@ -3,7 +3,7 @@ latex_creater.py
 ====================================
 A module that creates latex documents
 """
-from json_to_latex_converter import *
+import json_to_latex_converter
 
 
 def create_document(mediawiki_service):
@@ -36,11 +36,11 @@ def create_document(mediawiki_service):
     return full_text
 
 def create_section(section_heading: str, mediawiki_service) -> str:
-    query =f"[[Category:Title]][[Book type::{section_heading}]]|?Title (Arabic)|?Title (transliterated)|?Has author(s)|?Has author(s).Death (Hijri)|?Has author(s).Death (Gregorian)|?Has author(s).Death (Hijri) text|?Has author(s).Death (Gregorian) text|?Has a catalogue description|limit=5|sort=Has author(s).Death (Hijri)|order=asc"
+    query =f"[[Category:Title]][[Book type::{section_heading}]]|?Title (Arabic)|?Title (transliterated)|?Has author(s)|?Has author(s).Death (Hijri)|?Has author(s).Death (Gregorian)|?Has author(s).Death (Hijri) text|?Has author(s).Death (Gregorian) text|?Has a catalogue description|limit=10000|sort=Has author(s).Death (Hijri)|order=asc"
     if section_heading == "Monographs without commentaries":
-        query = "[[Category:Title]][[Book type::Monograph]][[Has number of commentaries::0]]|?Title (Arabic)|?Title (transliterated)|?Has author(s)|?Has author(s).Death (Hijri)|?Has author(s).Death (Gregorian)|?Has author(s).Death (Hijri) text|?Has author(s).Death (Gregorian) text|?Has a catalogue description|limit=5|sort=Has author(s).Death (Hijri)|order=asc"
+        query = "[[Category:Title]][[Book type::Monograph]][[Has number of commentaries::0]]|?Title (Arabic)|?Title (transliterated)|?Has author(s)|?Has author(s).Death (Hijri)|?Has author(s).Death (Gregorian)|?Has author(s).Death (Hijri) text|?Has author(s).Death (Gregorian) text|?Has a catalogue description|limit=10000|sort=Has author(s).Death (Hijri)|order=asc"
     if section_heading == "Monographs with commentaries":
-        query = "[[Category:Title]][[Book type::Monograph]][[Has number of commentaries::>>0]]|?Title (Arabic)|?Title (transliterated)|?Has author(s)|?Has author(s).Death (Hijri)|?Has author(s).Death (Gregorian)|?Has author(s).Death (Hijri) text|?Has author(s).Death (Gregorian) text|?Has a catalogue description|limit=5|sort=Has author(s).Death (Hijri)|order=asc"
+        query = "[[Category:Title]][[Book type::Monograph]][[Has number of commentaries::>>0]]|?Title (Arabic)|?Title (transliterated)|?Has author(s)|?Has author(s).Death (Hijri)|?Has author(s).Death (Gregorian)|?Has author(s).Death (Hijri) text|?Has author(s).Death (Gregorian) text|?Has a catalogue description|limit=10000|sort=Has author(s).Death (Hijri)|order=asc"
 
     entries = mediawiki_service.semantic_search(query)
     entries_with_manuscripts = mediawiki_service.get_manuscripts(entries)
@@ -131,7 +131,7 @@ def _make_entry(
 
 
 def _wrap_section(latex_body: str,section_heading: str) -> str:
-    return add_pre_and_post_commands(
+    return json_to_latex_converter.add_pre_and_post_commands(
         f"\\section{{{section_heading}}}\n\\begin{{enumerate}}",
         latex_body,
         "\\end{enumerate}",
@@ -163,7 +163,7 @@ def _wrap_document(latex_body: str) -> str:
     \\end{document}
     """
 
-    return add_pre_and_post_commands(pre, latex_body, post)
+    return json_to_latex_converter.add_pre_and_post_commands(pre, latex_body, post)
 
 
 def _create_dates(entry: dict) -> str:
@@ -218,7 +218,7 @@ def _make_manuscript_section(list_of_manuscripts: list) -> str:
     for manuscript in list_of_manuscripts:
         manuscript_section += _make_manuscript_entry(manuscript)
 
-    manuscript_section = add_pre_and_post_commands(
+    manuscript_section = json_to_latex_converter.add_pre_and_post_commands(
         "\\textbf{Principle Manuscripts}\n\\begin{itemize}",
         manuscript_section,
         "\\end{itemize}\n",
@@ -249,7 +249,7 @@ def _make_editions_section(list_of_editions: list) -> str:
     for edition in list_of_editions:
         edition_section += make_edition_entry(edition)
 
-    edition_section = add_pre_and_post_commands(
+    edition_section = json_to_latex_converter.add_pre_and_post_commands(
         "\\textbf{Editions}\n\\begin{itemize}",
         edition_section,
         "\\end{itemize}\n",
@@ -261,9 +261,9 @@ def _make_commentaries_section(list_of_commentaries: list) -> str:
 
     def make_commentary_entry(commentary_entry: dict) -> str:
         transliterated_title = "".join(commentary_entry["Title (transliterated)"])
-        arabic_title = commentary_entry["Title (Arabic)"][0]
+        #arabic_title = _safe_list_get(commentary_entry["Title (Arabic)"], 0, "no data")
         author = "".join(_safe_list_get(commentary_entry["Has author(s)"], 0, {"fulltext": "no data"})["fulltext"])
-        description = _safe_list_get(commentary_entry.get("Has a catalogue description"), 0, "no data")
+        #description = _safe_list_get(commentary_entry.get("Has a catalogue description"), 0, "no data")
         death_dates = _create_dates(commentary_entry)
         latex = f"""
               \item \\emph{{{transliterated_title}}}, {author} {death_dates}
@@ -274,7 +274,7 @@ def _make_commentaries_section(list_of_commentaries: list) -> str:
     for commentary in list_of_commentaries:
         commentary_section += make_commentary_entry(commentary)
 
-    commentary_section_with_headers = add_pre_and_post_commands(
+    commentary_section_with_headers = json_to_latex_converter.add_pre_and_post_commands(
         "\\textbf{Commentaries}\n\\begin{itemize}",
         commentary_section,
         "\\end{itemize}\n",
