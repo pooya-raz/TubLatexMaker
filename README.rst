@@ -29,7 +29,7 @@ Installing
    ``git@github.com:pooya-raz/TubLatexMaker.git``
 #. Install dependencies and environment with Poetry
 
-   ``poetry init``
+   ``poetry install``
 
 #. Run the program
 
