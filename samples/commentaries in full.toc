@@ -1,0 +1,11 @@
+\selectlanguage *{english}
+\contentsline {section}{\numberline {1}Monographs with commentaries}{2}{}%
+\contentsline {section}{\numberline {2}Monographs without commentaries}{6}{}%
+\contentsline {section}{\numberline {3}Gloss (ḥāshīyah)}{8}{}%
+\contentsline {section}{\numberline {4}Marginal notes (taʿlīqa)}{9}{}%
+\contentsline {section}{\numberline {5}Treatise (risāla)}{11}{}%
+\contentsline {section}{\numberline {6}Summary (khulāṣa/mukhtaṣar)}{13}{}%
+\contentsline {section}{\numberline {7}Poem (manẓūma)}{14}{}%
+\contentsline {section}{\numberline {8}Refutation (radd)}{16}{}%
+\contentsline {section}{\numberline {9}Taqrīrāt}{18}{}%
+\contentsline {section}{\numberline {10} Translation}{19}{}%
