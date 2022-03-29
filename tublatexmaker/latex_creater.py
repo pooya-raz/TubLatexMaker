@@ -3,7 +3,7 @@ latex_creater.py
 ====================================
 A module that creates latex documents
 """
-import json_to_latex_converter
+from tublatexmaker import json_to_latex_converter
 
 
 def create_document(mediawiki_service):
