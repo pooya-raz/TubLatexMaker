@@ -180,7 +180,7 @@ def _create_dates(entry: dict) -> str:
     if entry["Death (Gregorian) text"]:
         death_gregorian = entry["Death (Gregorian) text"][0]
 
-    return f"({death_hijri}/{death_gregorian})"
+    return f"(d. {death_hijri}/{death_gregorian})"
 
 
 def _get_manuscript_gregorian_dates(manuscript: dict) -> str:
@@ -213,13 +213,13 @@ def _make_manuscript_entry(manuscript: dict) -> str:
 
 def _make_manuscript_section(list_of_manuscripts: list) -> str:
     if not list_of_manuscripts:
-        return "\\textbf{Principle Manuscripts}\n\\newline\nno data\\newline"
+        return "\\textbf{Principal Manuscripts}\n\\newline\nno data\\newline"
     manuscript_section = ""
     for manuscript in list_of_manuscripts:
         manuscript_section += _make_manuscript_entry(manuscript)
 
     manuscript_section = json_to_latex_converter.add_pre_and_post_commands(
-        "\\textbf{Principle Manuscripts}\n\\begin{itemize}",
+        "\\textbf{Principal Manuscripts}\n\\begin{itemize}",
         manuscript_section,
         "\\end{itemize}\n",
     )
